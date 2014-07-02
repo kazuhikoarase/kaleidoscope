@@ -22,7 +22,6 @@ BODY {
 //    http://www.opensource.org/licenses/mit-license.php
 //
 
-
 var global = {};
 
 var preloadImages = function(completeHandler) {
@@ -188,7 +187,7 @@ var main = function() {
         });
         ctx.canvas.addEventListener('touchend', function(event) {
             mouseup(toPoints(event) );
-        }  );
+        } );
     }();
 
     var updateSize = function(w, h) {
