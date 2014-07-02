@@ -24,7 +24,6 @@ BODY {
 //    http://www.opensource.org/licenses/mit-license.php
 //
 
-
 window.onload = function() {
 
     var global = {};
@@ -60,6 +59,7 @@ window.onload = function() {
         ctx.canvas.height = rect;
 
         var particle = function() {
+
             var img = global.images[~~(Math.random() * global.images.length)];
             var x = Math.random() * rect;
             var y = Math.random() * rect;
@@ -68,6 +68,7 @@ window.onload = function() {
             var rot = Math.random() * Math.PI;
             var vrot = Math.random() * 0.05 + 0.01;
             var scale = Math.random() * 0.7 + 0.3;
+
             var move = function() {
 
                 ctx.save();
