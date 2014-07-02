@@ -130,6 +130,7 @@ var main = function() {
     var oy = len / Math.sqrt(3) / 2;
     var angle = 0;
     var deltaAngle = 0;
+    var pressed = false;
 
     var content = createContent(rect, 32);
 
@@ -141,7 +142,6 @@ var main = function() {
             return Math.atan2(p.y - cy, p.x - cx);
         };
 
-        var pressed = false;
         var holdAngle = 0;
 
         var mousedown = function(points) {
@@ -280,8 +280,10 @@ var main = function() {
 
         updateDisplay(w, h);
 
-        angle += deltaAngle;
-        deltaAngle *= 0.99;
+        if (!pressed) {
+            angle += deltaAngle;
+            deltaAngle *= 0.99;
+        }
 
         requestAnimationFrame(render);
     };
