@@ -171,13 +171,13 @@ var main = function() {
     
         cv.addEventListener('mousedown', function(event) {
             mousedown([event]);
-        });
+        } );
         cv.addEventListener('mousemove', function(event) {
             mousemove([event]);
-        });
+        } );
         cv.addEventListener('mouseup', function(event) {
             mouseup([]);
-        });
+        } );
         
         ctx.canvas.addEventListener('touchstart', function(event) {
             event.preventDefault();
@@ -188,7 +188,7 @@ var main = function() {
         });
         ctx.canvas.addEventListener('touchend', function(event) {
             mouseup(toPoints(event) );
-        });
+        }  );
     }();
 
     var updateSize = function(w, h) {
