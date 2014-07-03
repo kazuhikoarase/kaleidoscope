@@ -108,7 +108,7 @@ window.onload = function() {
         return {
             canvas : ctx.canvas,
             moveAll : moveAll
-        }
+        };
     };
 
     var main = function() {
@@ -229,7 +229,6 @@ window.onload = function() {
 
             ctx.restore();
         };
-
 
         var updateDisplay = function(w, h) {
 
