@@ -38,7 +38,9 @@ window.onload = function() {
         loadImages();
     };
 
-    var createContent = function(rect, numParticles) {
+    var createContent = function(rect, ox, oy, numParticles) {
+
+        var _deltaAngle = 0;
 
         var ctx = document.createElement('canvas').getContext('2d');
         ctx.canvas.width = rect;
@@ -47,12 +49,15 @@ window.onload = function() {
         var particle = function() {
 
             var img = global.images[~~(Math.random() * global.images.length)];
+            var ax = 0;
+            var ay = 0;
+            var vx = 0;
+            var vy = 0;
             var x = Math.random() * rect;
             var y = Math.random() * rect;
-            var vx = Math.random() * 0.1;
-            var vy = Math.random() * 0.1;
+            var arot = 0;
+            var vrot = 0;
             var rot = Math.random() * Math.PI;
-            var vrot = Math.random() * 0.05 + 0.01;
             var scale = Math.random() * 0.7 + 0.3;
 
             var move = function() {
@@ -67,6 +72,9 @@ window.onload = function() {
                 ctx.drawImage(img, 0, 0);
                 ctx.restore();
 
+                vx += ax;
+                vy += ay;
+                vrot += arot;
                 x += vx;
                 y += vy;
                 rot = (rot + vrot) % (Math.PI * 2);
@@ -87,6 +95,18 @@ window.onload = function() {
                     y = 0;
                     vy = -vy;
                 }
+
+                var dx = x - ox;
+                var dy = y - oy;
+                var r = Math.sqrt(dx * dx + dy * dy);
+                var t = Math.atan2(dy, dx) + Math.PI / 2;
+                var a = _deltaAngle * r / rect;
+                ax = Math.cos(t) * a;
+                ay = Math.sin(t) * a;
+                arot = a * 0.1;
+                vx *= 0.99;
+                vy *= 0.99;
+                vrot *= 0.99;
             };
 
             return {move: move};
@@ -105,9 +125,14 @@ window.onload = function() {
             }
         };
 
+        var setDeltaAngle = function(deltaAngle) {
+        	_deltaAngle = deltaAngle;
+        };
+        
         return {
             canvas : ctx.canvas,
-            moveAll : moveAll
+            moveAll : moveAll,
+            setDeltaAngle : setDeltaAngle
         };
     };
 
@@ -123,7 +148,7 @@ window.onload = function() {
         var deltaAngle = 0;
         var pressed = false;
 
-        var content = createContent(rect, 32);
+        var content = createContent(rect, ox, oy, 32);
 
         !function() {
 
@@ -274,7 +299,8 @@ window.onload = function() {
                 angle += deltaAngle;
                 deltaAngle *= 0.99;
             }
-
+            content.setDeltaAngle(deltaAngle);
+            
             requestAnimationFrame(render);
         };
         render();
