@@ -46,6 +46,10 @@ window.onload = function() {
         ctx.canvas.width = rect;
         ctx.canvas.height = rect;
 
+        var bufCtx = document.createElement('canvas').getContext('2d');
+        bufCtx.canvas.width = rect;
+        bufCtx.canvas.height = rect;
+
         var particle = function() {
 
             var img = global.images[~~(Math.random() * global.images.length)];
@@ -118,7 +122,13 @@ window.onload = function() {
         }
 
         var moveAll = function() {
+            bufCtx.clearRect(0, 0, rect, rect);
+            bufCtx.drawImage(ctx.canvas, 0, 0);
             ctx.clearRect(0, 0, rect, rect);
+            ctx.save();
+            ctx.globalAlpha = 0.8;
+            ctx.drawImage(bufCtx.canvas, 0, 0);
+            ctx.restore();
             ctx.globalCompositeOperation = 'lighter';
             for (var i = 0; i < particles.length; i += 1) {
                 particles[i].move();
