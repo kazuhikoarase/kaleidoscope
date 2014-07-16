@@ -195,13 +195,13 @@ window.onload = function() {
                 return p;
             };
 
-            cv.addEventListener('mousedown', function(event) {
+            ctx.canvas.addEventListener('mousedown', function(event) {
                 mousedown([event]);
             } );
-            cv.addEventListener('mousemove', function(event) {
+            ctx.canvas.addEventListener('mousemove', function(event) {
                 mousemove([event]);
             } );
-            cv.addEventListener('mouseup', function(event) {
+            ctx.canvas.addEventListener('mouseup', function(event) {
                 mouseup([]);
             } );
 
