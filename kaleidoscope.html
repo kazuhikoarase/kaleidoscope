@@ -5,26 +5,59 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
 <style type="text/css">
 BODY {
-  padding: 0px;
-  margin: 0px;
-  overflow: hidden;
-  background-color: #000000;
+  font-family: arial, sans-serif;
 }
 </style>
 <script type="text/javascript" src="kaleidoscope.js"></script>
+<script type="text/javascript">
+
+window.onload = function() {
+
+  var ctx = document.getElementById('cv').getContext('2d');
+  var imageSrcList = ctx.canvas.innerHTML.
+    replace(/^\s+|\s+$/g,'').split(/\s+/g);
+  var ks = kaleidoscope(ctx, imageSrcList, '#333333');
+  var normalSize = function() {
+    return { width: 400, height: 400 };
+  };
+  var fullScreen = function() {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+  };
+  ks.getSize = normalSize;
+
+  ctx.canvas.addEventListener('dblclick', function() {
+    if (ks.getSize == normalSize) {
+      ks.getSize = fullScreen;
+      ctx.canvas.style.position = 'absolute';
+      ctx.canvas.style.left = '0px';
+      ctx.canvas.style.top = '0px';
+    } else {
+      ks.getSize = normalSize;
+      ctx.canvas.style.position = 'static';
+    }
+  });
+};
+
+</script>
 <title>kaleidoscope</title>
 </head>
 <body>
-<canvas id="cv"></canvas>
-<div id="imageList" style="display:none;">
-b.png
-c.png
-g.png
-m.png
-o.png
-p.png
-r.png
-y.png
-</div>
+<h1>kaleidoscope</h1>
+<p>
+double-click to full screen mode.
+</p>
+<canvas id="cv">
+assets/b.png
+assets/c.png
+assets/g.png
+assets/m.png
+assets/o.png
+assets/p.png
+assets/r.png
+assets/y.png
+</canvas>
 </body>
 </html>
