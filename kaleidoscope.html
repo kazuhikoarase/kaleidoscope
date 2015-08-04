@@ -1,63 +1,124 @@
 <!doctype html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
-<style type="text/css">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+
+		<!-- Include jQuery Mobile stylesheets -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+		<!-- Include the jQuery library -->
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+		<!-- Include the jQuery Mobile library -->
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+		<style type="text/css">
 BODY {
-  font-family: arial, sans-serif;
+	font-family: arial, sans-serif;
 }
-</style>
-<script type="text/javascript" src="kaleidoscope.js"></script>
-<script type="text/javascript">
 
-window.onload = function() {
+.imglist{
+	display:none;
+}
+#cv{
+	position : absolute;
+	top : 0px;
+	left : 0px;
+}
+		</style>
+		<script type="text/javascript" src="kaleidoscope.js"></script>
+		<script type="text/javascript">
 
-  var ctx = document.getElementById('cv').getContext('2d');
-  var imageSrcList = ctx.canvas.innerHTML.
-    replace(/^\s+|\s+$/g,'').split(/\s+/g);
-  var ks = kaleidoscope(ctx, imageSrcList, '#000000');
-  var normalSize = function() {
-    return { width: 400, height: 400 };
-  };
-  var fullScreen = function() {
-    return {
-      width: window.innerWidth,
-      height: window.innerHeight
-    };
-  };
-  ks.getSize = normalSize;
+$(document).ready(function(){
+	$('#btn-cross').click(function(){
+		switchImg("img-cross");
+	});
+	$('#btn-snow').click(function(){
+		switchImg("img-snow");
+	});
+	$('#btn-atoms').click(function(){
+		switchImg("img-atoms");
+	});
+	$('#btn-amon').click(function(){
+		switchImg("img-amon",'#eeeeee');
+	});
+	switchImg("img-cross");
+});
 
-  ctx.canvas.addEventListener('dblclick', function() {
-    if (ks.getSize == normalSize) {
-      ks.getSize = fullScreen;
-      ctx.canvas.style.position = 'absolute';
-      ctx.canvas.style.left = '0px';
-      ctx.canvas.style.top = '0px';
-    } else {
-      ks.getSize = normalSize;
-      ctx.canvas.style.position = 'static';
-    }
-  });
-};
+function switchImg(i,bg){
+	var ctx = $('canvas')[0].getContext('2d');
+	var imageSrcList = $('#' + i).html().replace(/^\s+|\s+$/g,'').split(/\s+/g);
+	var ks = kaleidoscope(ctx, imageSrcList, bg?bg:'#000000');
+}
 
-</script>
-<title>kaleidoscope</title>
-</head>
-<body>
-<h1>kaleidoscope</h1>
-<p>
-double-click to full screen mode.
-</p>
-<canvas id="cv">
-assets/b.png
-assets/c.png
-assets/g.png
-assets/m.png
-assets/o.png
-assets/p.png
-assets/r.png
-assets/y.png
-</canvas>
-</body>
+		</script>
+		<title>万花筒</title>
+	</head>
+	<body>
+		<div class="imglist" id="img-amon">
+					assets/amon1.png
+					assets/amon2.png
+					assets/amon3.png
+					assets/amon4.png
+					assets/amon5.png
+					assets/amon6.png
+		</div>
+		<div class="imglist" id="img-atoms">
+					assets/atom1.png
+					assets/atom2.png
+					assets/atom3.png
+					assets/atom4.png
+					assets/atom5.png
+		</div>
+		<div class="imglist" id="img-cross">
+					assets/b.png
+					assets/c.png
+					assets/g.png
+					assets/m.png
+					assets/o.png
+					assets/p.png
+					assets/r.png
+					assets/y.png
+		</div>
+		<div class="imglist" id="img-snow">
+					assets/snowflake1.png
+					assets/snowflake2.png
+					assets/snowflake3.png
+					assets/snowflake4.png
+					assets/snowflake5.png
+		</div>
+
+		<div id="home" data-role="page">
+			<div data-role="main" class="ui-content">
+				<canvas id="cv">
+				</canvas>
+				<a href="#dialog" class="ui-btn ui-btn-inline" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
+			</div>
+		</div>
+
+		<div data-role="page" data-dialog="true" id="dialog">
+			<div data-role="header">
+				<h1>选择图案</h1>
+			</div>
+			<div data-role="main" class="ui-content">
+				<a id="btn-cross" href="#home" class="ui-btn ui-btn-inline">
+					<img src="assets/b.png" alt="" width="26" height="26">
+					绚丽十字
+				</a>
+				<a id="btn-snow" href="#home" class="ui-btn ui-btn-inline">
+					<img src="assets/snowflake1.png" alt="" width="26" height="26">
+					缤纷雪花
+				</a>
+				<a id="btn-atoms" href="#home" class="ui-btn ui-btn-inline">
+					<img src="assets/atom1.png" alt="" width="26" height="26">
+					运转原子
+				</a>
+				<a id="btn-amon" href="#home" class="ui-btn ui-btn-inline">
+					<img src="assets/amon1.png" alt="" width="26" height="26">
+					多拉A梦
+				</a>
+			</div>
+		</div>
+	</body>
 </html>

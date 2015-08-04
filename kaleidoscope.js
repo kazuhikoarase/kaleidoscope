@@ -118,7 +118,7 @@ var kaleidoscope = function() {
       ctx.globalAlpha = 0.8;
       ctx.drawImage(bufCtx.canvas, 0, 0);
       ctx.restore();
-      ctx.globalCompositeOperation = 'lighter';
+      //ctx.globalCompositeOperation = 'lighter';
       for (var i = 0; i < particles.length; i += 1) {
         particles[i].move();
       }
@@ -188,7 +188,7 @@ var kaleidoscope = function() {
         var currAngle = getAngle(points[0]);
         deltaAngle = currAngle - holdAngle;
         holdAngle = currAngle;
-        angle += deltaAngle;
+        angle += deltaAngle ;
       }
     };
     var mouseup = function(points) {
