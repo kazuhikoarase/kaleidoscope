@@ -138,6 +138,8 @@ var kaleidoscope = function() {
   return function(ctx, imageSrcList, bgColor) {
 
     var rect = 160;
+	//calculate the height property for the inner equi edge tri-angle 
+	//in the square.
     var len = rect * Math.sqrt(3) / 2;
     var ox = len / 2;
     var oy = len / Math.sqrt(3) / 2;
@@ -163,6 +165,7 @@ var kaleidoscope = function() {
   
         if (!pressed) {
           angle += deltaAngle;
+		  //delta angle loss 0.99
           deltaAngle *= 0.99;
         }
         content.setDeltaAngle(deltaAngle);
@@ -172,6 +175,9 @@ var kaleidoscope = function() {
       render();
     };
 
+	//use cx and cy as the origin, 
+	// first map p to the new origin
+	// then, get the angle of the mapped point p to X axis(Math.atan2)
     var getAngle = function(p) {
       var cx = ctx.canvas.width / 2;
       var cy = ctx.canvas.height / 2;
@@ -250,17 +256,20 @@ var kaleidoscope = function() {
       ctx.save();
 
       ctx.translate(x, y);
-      ctx.rotate(angle);
+      //ctx.rotate(angle);
       ctx.translate(-ox, -oy);
 
+	  
       if (inv) {
         ctx.transform(1, 0, 0, -1, 0, 0);
       }
 
+	  
       for (var i = 0; i < rot; i += 1) {
         ctx.rotate(-Math.PI / 3 * 2);
         ctx.translate(-len, 0);
       }
+	  
 
       // clip triangle
       ctx.beginPath();
@@ -272,7 +281,7 @@ var kaleidoscope = function() {
 
       // adjust
       ctx.translate(ox, oy);
-      ctx.rotate(-angle);
+      //ctx.rotate(-angle);
 
       // content
       ctx.translate(-rect / 2, -rect / 2);
@@ -291,10 +300,12 @@ var kaleidoscope = function() {
 
       // misc
       var n = Math.ceil(Math.sqrt(w * w + h * h) / 2 / len) + 1;
-      var mxx = Math.cos(angle) * len;
-      var mxy = Math.sin(angle) * len;
-      var myx = Math.cos(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
-      var myy = Math.sin(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
+	  //replace variable angle with 0, to cease the canvas
+	  //from rotating.
+      var mxx = Math.cos(0) * len;
+      var mxy = Math.sin(0) * len;
+      var myx = Math.cos(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
+      var myy = Math.sin(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
 
       // render
       ctx.clearRect(0, 0, w, h);
