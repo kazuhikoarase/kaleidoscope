@@ -137,7 +137,7 @@ var kaleidoscope = function() {
 
   return function(ctx, imageSrcList, bgColor) {
 
-    var rect = 160;
+    var rect = 100;
 	//calculate the height property for the inner equi edge tri-angle 
 	//in the square.
     var len = rect * Math.sqrt(3) / 2;
@@ -290,6 +290,66 @@ var kaleidoscope = function() {
       ctx.restore();
     };
 
+	var updateDisplay = function(w, h){
+		content.moveAll();
+
+		// render
+		ctx.clearRect(0, 0, w, h);
+
+		if (bgColor) {
+			ctx.fillStyle = bgColor;
+			ctx.fillRect(0, 0, w, h);
+		}
+		var vert_sqrs = Math.ceil(h/rect) ;
+		var horiz_sqrs = Math.ceil(w/rect) ;
+		var rot = 0;
+
+		for(var i = 0; i < horiz_sqrs; i++){
+			for(var j = 0; j < vert_sqrs; j++){
+				drawSquareUnit(i * rect, j * rect,
+						i,
+						j);
+			}
+		}
+	};
+
+	var drawSquareUnit = function(x,y,i,j){
+		ctx.save();
+
+		var scale_x,scale_y,trans_x,trans_y;
+		
+		if(i % 2 === 0){
+			scale_x = 1;
+			trans_x = x;
+		} else {
+			scale_x = -1;
+			trans_x = x + rect;
+		}
+
+		if(j % 2 === 0){
+			scale_y = 1;
+			trans_y = y;
+		} else {
+			scale_y = -1;
+			trans_y = y + rect;
+		}
+		ctx.translate(trans_x,trans_y);
+		ctx.scale(scale_x,scale_y);
+		ctx.drawImage(content.canvas,0,0);
+		ctx.restore();
+
+		/*
+		ctx.save();
+		ctx.translate(x,y);
+		ctx.textAlign = 'center';
+		ctx.font = "10 Arial";
+		ctx.fillStyle = 'red';
+		ctx.fillText("UNIT(" + i + "," + j + ")",rect/2, rect/2);
+		ctx.restore();
+		*/
+	};
+
+	/*
     var updateDisplay = function(w, h) {
 
       content.moveAll();
@@ -317,7 +377,7 @@ var kaleidoscope = function() {
 
       for (var x = -n; x <= n; x += 1) {
         for (var y = -n; y <= n; y += 1) {
-          var dx = x + ( (y % 2 != 0)? 0.5 : 0);
+          var dx = x + ( (y % 2 !== 0)? 0.5 : 0);
           var dy = y;
           var tx = mxx * dx + myx * dy + cx;
           var ty = mxy * dx + myy * dy + cy;
@@ -327,6 +387,7 @@ var kaleidoscope = function() {
         }
       }
     };
+	*/
   
     var ks = {
       getSize: function() {
