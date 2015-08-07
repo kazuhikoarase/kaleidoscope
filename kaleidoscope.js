@@ -137,12 +137,12 @@ var kaleidoscope = function() {
 
   return function(ctx, imageSrcList, bgColor) {
 
-    var rect = 100;
+    var rect = 160;
 	//calculate the height property for the inner equi edge tri-angle 
 	//in the square.
     var len = rect * Math.sqrt(3) / 2;
-    var ox = len / 2;
-    var oy = len / Math.sqrt(3) / 2;
+    var ox = rect / 2;
+    var oy = rect / 2;
     var angle = 0;
     var deltaAngle = 0;
     var pressed = false;
@@ -296,24 +296,31 @@ var kaleidoscope = function() {
 		// render
 		ctx.clearRect(0, 0, w, h);
 
+		var len = rect/2;
+
 		if (bgColor) {
 			ctx.fillStyle = bgColor;
 			ctx.fillRect(0, 0, w, h);
 		}
-		var vert_sqrs = Math.ceil(h/rect) ;
-		var horiz_sqrs = Math.ceil(w/rect) ;
-		var rot = 0;
+		var diag = Math.sqrt( h*h + w*w );
+		var sqrs = Math.ceil( diag / len) + 1;
+		ctx.save();
+		ctx.translate((w-diag)/2,(h-diag)/2);
+		ctx.translate(diag/2,diag/2);
+		ctx.rotate(angle);
+		ctx.translate(-diag/2,-diag/2);
 
-		for(var i = 0; i < horiz_sqrs; i++){
-			for(var j = 0; j < vert_sqrs; j++){
-				drawSquareUnit(i * rect, j * rect,
+		for(var i = 0; i < sqrs; i++){
+			for(var j = 0; j < sqrs; j++){
+				drawSquareUnit(i * len, j * len,len,
 						i,
 						j);
 			}
 		}
+		ctx.restore();
 	};
 
-	var drawSquareUnit = function(x,y,i,j){
+	var drawSquareUnit = function(x,y,l,i,j){
 		ctx.save();
 
 		var scale_x,scale_y,trans_x,trans_y;
@@ -323,7 +330,7 @@ var kaleidoscope = function() {
 			trans_x = x;
 		} else {
 			scale_x = -1;
-			trans_x = x + rect;
+			trans_x = x + l;
 		}
 
 		if(j % 2 === 0){
@@ -331,10 +338,13 @@ var kaleidoscope = function() {
 			trans_y = y;
 		} else {
 			scale_y = -1;
-			trans_y = y + rect;
+			trans_y = y + l;
 		}
 		ctx.translate(trans_x,trans_y);
 		ctx.scale(scale_x,scale_y);
+		ctx.beginPath();
+		ctx.rect(0,0,l,l);
+		ctx.clip();
 		ctx.drawImage(content.canvas,0,0);
 		ctx.restore();
 
@@ -344,7 +354,9 @@ var kaleidoscope = function() {
 		ctx.textAlign = 'center';
 		ctx.font = "10 Arial";
 		ctx.fillStyle = 'red';
-		ctx.fillText("UNIT(" + i + "," + j + ")",rect/2, rect/2);
+		ctx.fillText("UNIT(" + i + "," + j + ")",l/2, l/2);
+		ctx.fillText("SCL("+scale_x +","+scale_y+")",l/2,l/2 + 10);
+		ctx.fillText("TRANS(" + trans_x + "," +trans_y + ")",l/2,l/2 + 20);
 		ctx.restore();
 		*/
 	};
