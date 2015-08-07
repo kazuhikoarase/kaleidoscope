@@ -137,11 +137,18 @@ var kaleidoscope = function() {
 
   return function(ctx, imageSrcList, bgColor,rotScreen,shape) {
 
-    var rect = 160;
-	//calculate the height property for the inner equi edge tri-angle 
-	//in the square.
-    var ox = rect / 2;
-    var oy = rect / 2;
+    var rect = 160,len,ox,oy;
+
+	if(shape === 'square'){
+		len = Math.sin(Math.PI/4) * rect;
+		ox = rect / 2;
+		oy = rect / 2;
+	} else {
+		len = rect * Math.sqrt(3) / 2;
+		ox = len / 2;
+		oy = len / Math.sqrt(3) / 2;
+	}
+	
 
     var angle = 0;
     var deltaAngle = 0;
@@ -283,6 +290,8 @@ var kaleidoscope = function() {
       ctx.lineTo(l, 0);
       ctx.lineTo(l / 2, l * Math.sqrt(3) / 2);
       ctx.closePath();
+	  ctx.strokeStyle = 'red';
+	  ctx.stroke();
       ctx.clip();
 
       // adjust
@@ -292,6 +301,9 @@ var kaleidoscope = function() {
 
       // content
       ctx.translate(-rect / 2, -rect / 2);
+	  ctx.strokeStyle = 'green';
+	  ctx.rect(0,0,content.canvas.width,content.canvas.height);
+	  ctx.stroke();
       ctx.drawImage(content.canvas, 0, 0);
 
       ctx.restore();
@@ -303,7 +315,6 @@ var kaleidoscope = function() {
 		// render
 		ctx.clearRect(0, 0, w, h);
 
-		var len = rect/2;
 
 		if (bgColor) {
 			ctx.fillStyle = bgColor;
@@ -375,7 +386,6 @@ var kaleidoscope = function() {
 
       content.moveAll();
 
-	  var len = rect * Math.sqrt(3) / 2;
       // center
       var cx = w / 2;
       var cy = h / 2;
