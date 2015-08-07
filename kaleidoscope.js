@@ -315,7 +315,6 @@ var kaleidoscope = function() {
 		// render
 		ctx.clearRect(0, 0, w, h);
 
-
 		if (bgColor) {
 			ctx.fillStyle = bgColor;
 			ctx.fillRect(0, 0, w, h);
@@ -366,20 +365,19 @@ var kaleidoscope = function() {
 		ctx.beginPath();
 		ctx.rect(0,0,l,l);
 		ctx.clip();
+		//
+		// the upper left coner of clip area has
+		// an offset against the outer rectangle.
+		ctx.translate(-(rect - len )/ 2,-(rect - len )/ 2);
+		//rotate to make outer rect counteract againt
+		//the rotating scene.
+		ctx.translate(ox,oy);
+		ctx.rotate(-angle);
+		ctx.translate(-ox,-oy);
+
 		ctx.drawImage(content.canvas,0,0);
 		ctx.restore();
 
-		/*
-		ctx.save();
-		ctx.translate(x,y);
-		ctx.textAlign = 'center';
-		ctx.font = "10 Arial";
-		ctx.fillStyle = 'red';
-		ctx.fillText("UNIT(" + i + "," + j + ")",l/2, l/2);
-		ctx.fillText("SCL("+scale_x +","+scale_y+")",l/2,l/2 + 10);
-		ctx.fillText("TRANS(" + trans_x + "," +trans_y + ")",l/2,l/2 + 20);
-		ctx.restore();
-		*/
 	};
 
     var updateTriangleDisplay = function(w, h) {
