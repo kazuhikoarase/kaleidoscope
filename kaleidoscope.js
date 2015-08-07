@@ -290,8 +290,6 @@ var kaleidoscope = function() {
       ctx.lineTo(l, 0);
       ctx.lineTo(l / 2, l * Math.sqrt(3) / 2);
       ctx.closePath();
-	  ctx.strokeStyle = 'red';
-	  ctx.stroke();
       ctx.clip();
 
       // adjust
@@ -301,9 +299,6 @@ var kaleidoscope = function() {
 
       // content
       ctx.translate(-rect / 2, -rect / 2);
-	  ctx.strokeStyle = 'green';
-	  ctx.rect(0,0,content.canvas.width,content.canvas.height);
-	  ctx.stroke();
       ctx.drawImage(content.canvas, 0, 0);
 
       ctx.restore();
@@ -372,6 +367,7 @@ var kaleidoscope = function() {
 		//rotate to make outer rect counteract againt
 		//the rotating scene.
 		ctx.translate(ox,oy);
+		if(rotScreen)
 		ctx.rotate(-angle);
 		ctx.translate(-ox,-oy);
 
