@@ -135,14 +135,14 @@ var kaleidoscope = function() {
     };
   };
 
-  return function(ctx, imageSrcList, bgColor) {
+  return function(ctx, imageSrcList, bgColor,rotScreen,shape) {
 
     var rect = 160;
 	//calculate the height property for the inner equi edge tri-angle 
 	//in the square.
-    var len = rect * Math.sqrt(3) / 2;
     var ox = rect / 2;
     var oy = rect / 2;
+
     var angle = 0;
     var deltaAngle = 0;
     var pressed = false;
@@ -161,7 +161,11 @@ var kaleidoscope = function() {
   
         var size = ks.getSize();
         updateSize(size.width, size.height);
-        updateDisplay(size.width, size.height);
+		if(shape === 'square'){
+			updateSquareDisplay(size.width, size.height);
+		} else {
+			updateTriangleDisplay(size.width, size.height);
+		}
   
         if (!pressed) {
           angle += deltaAngle;
@@ -251,13 +255,15 @@ var kaleidoscope = function() {
       return (ret < 0)? n + ret : ret;
     };
 
-    var drawUnit = function(x, y, rot, inv) {
+    var drawTriangleUnit = function(x, y, l, rot, inv) {
 
       ctx.save();
 
-      ctx.translate(x, y);
-      //ctx.rotate(angle);
-      ctx.translate(-ox, -oy);
+		 ctx.translate(x, y);
+	  if(rotScreen){
+		  ctx.rotate(angle);
+	  }
+		  ctx.translate(-ox, -oy);
 
 	  
       if (inv) {
@@ -267,21 +273,22 @@ var kaleidoscope = function() {
 	  
       for (var i = 0; i < rot; i += 1) {
         ctx.rotate(-Math.PI / 3 * 2);
-        ctx.translate(-len, 0);
+        ctx.translate(-l, 0);
       }
 	  
 
       // clip triangle
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(len, 0);
-      ctx.lineTo(len / 2, len * Math.sqrt(3) / 2);
+      ctx.lineTo(l, 0);
+      ctx.lineTo(l / 2, l * Math.sqrt(3) / 2);
       ctx.closePath();
       ctx.clip();
 
       // adjust
       ctx.translate(ox, oy);
-      //ctx.rotate(-angle);
+	  if(rotScreen)
+      ctx.rotate(-angle);
 
       // content
       ctx.translate(-rect / 2, -rect / 2);
@@ -290,7 +297,7 @@ var kaleidoscope = function() {
       ctx.restore();
     };
 
-	var updateDisplay = function(w, h){
+	var updateSquareDisplay = function(w, h){
 		content.moveAll();
 
 		// render
@@ -305,10 +312,13 @@ var kaleidoscope = function() {
 		var diag = Math.sqrt( h*h + w*w );
 		var sqrs = Math.ceil( diag / len) + 1;
 		ctx.save();
-		ctx.translate((w-diag)/2,(h-diag)/2);
-		ctx.translate(diag/2,diag/2);
-		ctx.rotate(angle);
-		ctx.translate(-diag/2,-diag/2);
+		//rotate screen
+		if(rotScreen){
+			ctx.translate((w-diag)/2,(h-diag)/2);
+			ctx.translate(diag/2,diag/2);
+			ctx.rotate(angle);
+			ctx.translate(-diag/2,-diag/2);
+		} 
 
 		for(var i = 0; i < sqrs; i++){
 			for(var j = 0; j < sqrs; j++){
@@ -361,11 +371,11 @@ var kaleidoscope = function() {
 		*/
 	};
 
-	/*
-    var updateDisplay = function(w, h) {
+    var updateTriangleDisplay = function(w, h) {
 
       content.moveAll();
 
+	  var len = rect * Math.sqrt(3) / 2;
       // center
       var cx = w / 2;
       var cy = h / 2;
@@ -374,10 +384,18 @@ var kaleidoscope = function() {
       var n = Math.ceil(Math.sqrt(w * w + h * h) / 2 / len) + 1;
 	  //replace variable angle with 0, to cease the canvas
 	  //from rotating.
-      var mxx = Math.cos(0) * len;
-      var mxy = Math.sin(0) * len;
-      var myx = Math.cos(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
-      var myy = Math.sin(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
+	  var mxx,mxy,myx,myy;
+	  if(rotScreen){
+		  mxx = Math.cos(angle) * len;
+		  mxy = Math.sin(angle) * len;
+		  myx = Math.cos(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
+		  myy = Math.sin(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
+	  } else {
+		  mxx = Math.cos(0) * len;
+		  mxy = Math.sin(0) * len;
+		  myx = Math.cos(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
+		  myy = Math.sin(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
+	  }
 
       // render
       ctx.clearRect(0, 0, w, h);
@@ -394,12 +412,11 @@ var kaleidoscope = function() {
           var tx = mxx * dx + myx * dy + cx;
           var ty = mxy * dx + myy * dy + cy;
           var rot = (absmod(x, 3) + absmod(y, 2) * 2) % 3;
-          drawUnit(tx, ty, rot, false);
-          drawUnit(tx, ty, rot, true);
+          drawTriangleUnit(tx, ty, len, rot, false);
+          drawTriangleUnit(tx, ty, len, rot, true);
         }
       }
     };
-	*/
   
     var ks = {
       getSize: function() {

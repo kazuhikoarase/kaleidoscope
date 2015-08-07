@@ -49,7 +49,7 @@ $(document).ready(function(){
 function switchImg(i,bg){
 	var ctx = $('canvas')[0].getContext('2d');
 	var imageSrcList = $('#' + i).html().replace(/^\s+|\s+$/g,'').split(/\s+/g);
-	var ks = kaleidoscope(ctx, imageSrcList, bg?bg:'#000000');
+	var ks = kaleidoscope(ctx, imageSrcList, bg?bg:'#000000',false,'triangle');
 }
 
 		</script>
