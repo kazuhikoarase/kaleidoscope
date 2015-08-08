@@ -37,11 +37,14 @@
             var rotate = true,
                 shape = 'triangle',
                 img = "cross",
-                bg = '#000000';
+                bg = '#000000',
+				ks;
 
 			$("#btn-set-done").click(function(){
+				if(ks){
+					ks.destroy();
+				}
 				img = $("select")[0].value;
-				
 				rotate = $("#rotate")[0].checked;
 				shape = $("#triangle")[0].checked ? "triangle" : "square";
 				updateScreen();
@@ -56,7 +59,9 @@
                 } else {
                     bg = '#000000';
                 }
-                var ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
+
+
+                ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
 				ks.addStatsListener(function(){
 					console.log(ks.getStats());
 				});
@@ -82,8 +87,7 @@
 
     <div id="home" data-role="page">
         <div data-role="main" class="ui-content">
-            <canvas id="cv">
-            </canvas>
+			<canvas id="cv">你的浏览器不支持HTML5</canvas>
             <a href="#dialog" class="ui-btn ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
         </div>
     </div>
