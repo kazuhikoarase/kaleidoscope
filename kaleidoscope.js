@@ -136,7 +136,7 @@ var kaleidoscope = function() {
   };
 
   return function(ctx, imageSrcList, bgColor,rotScreen,shape) {
-
+	var anim_id = 0;
 	var statsListener = [];
 	var num_attempts = 0;
 	var rot_degree = 0;
@@ -193,7 +193,7 @@ var kaleidoscope = function() {
         }
         content.setDeltaAngle(deltaAngle);
         
-        requestAnimationFrame(render);
+        anim_id = requestAnimationFrame(render);
       };
       render();
     };
@@ -453,6 +453,11 @@ var kaleidoscope = function() {
 				attempts : num_attempts,
 				angle : rot_degree
 			};
+		},
+		destroy : function(){
+			if(anim_id){
+				cancelAnimationFrame(anim_id);
+			}
 		}
     };
     return ks;
