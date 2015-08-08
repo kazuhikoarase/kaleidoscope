@@ -136,6 +136,7 @@ var kaleidoscope = function() {
   };
 
   return function(ctx, imageSrcList, bgColor,rotScreen,shape) {
+	var anim_id = 0;
 
     var rect = 160,len,ox,oy;
 
@@ -160,6 +161,7 @@ var kaleidoscope = function() {
       init(images);
     } );
 
+
     var init = function(images) {
 
       content = createContent(rect, ox, oy, images, 32);
@@ -174,14 +176,14 @@ var kaleidoscope = function() {
 			updateTriangleDisplay(size.width, size.height);
 		}
   
-        if (!pressed) {
+        if (!pressed && deltaAngle !== 0) {
           angle += deltaAngle;
 		  //delta angle loss 0.99
           deltaAngle *= 0.99;
         }
         content.setDeltaAngle(deltaAngle);
         
-        requestAnimationFrame(render);
+        anim_id = requestAnimationFrame(render);
       };
       render();
     };
@@ -421,14 +423,19 @@ var kaleidoscope = function() {
         }
       }
     };
-  
+ 
     var ks = {
       getSize: function() {
         return {
           width: window.innerWidth,
           height: window.innerHeight
         };
-      }
+      },
+		destroy : function(){
+			if(anim_id){
+				cancelAnimationFrame(anim_id);
+			}
+		}
     };
     return ks;
   };
