@@ -137,6 +137,10 @@ var kaleidoscope = function() {
 
   return function(ctx, imageSrcList, bgColor,rotScreen,shape) {
 
+	var statsListener = [];
+	var num_attempts = 0;
+	var rot_degree = 0;
+
     var rect = 160,len,ox,oy;
 
 	if(shape === 'square'){
@@ -160,6 +164,12 @@ var kaleidoscope = function() {
       init(images);
     } );
 
+	var statsUpdate = function(){
+		statsListener.forEach(function(f){
+			f();
+		});
+	};
+
     var init = function(images) {
 
       content = createContent(rect, ox, oy, images, 64);
@@ -174,8 +184,10 @@ var kaleidoscope = function() {
 			updateTriangleDisplay(size.width, size.height);
 		}
   
-        if (!pressed) {
+        if (!pressed && deltaAngle !== 0) {
           angle += deltaAngle;
+		  rot_degree += Math.abs(deltaAngle) * (180 / Math.PI);
+		  statsUpdate();
 		  //delta angle loss 0.99
           deltaAngle *= 0.99;
         }
@@ -199,6 +211,8 @@ var kaleidoscope = function() {
       holdAngle = getAngle(points[0]);
       deltaAngle = 0;
       pressed = true;
+	  num_attempts ++;
+	  statsUpdate();
     };
     var mousemove = function(points) {
       if (pressed) {
@@ -206,6 +220,8 @@ var kaleidoscope = function() {
         deltaAngle = currAngle - holdAngle;
         holdAngle = currAngle;
         angle += deltaAngle ;
+		rot_degree += Math.abs(deltaAngle) * (180 / Math.PI);
+		statsUpdate();
       }
     };
     var mouseup = function(points) {
@@ -421,14 +437,23 @@ var kaleidoscope = function() {
         }
       }
     };
-  
+ 
     var ks = {
       getSize: function() {
         return {
           width: window.innerWidth,
           height: window.innerHeight
         };
-      }
+      },
+		addStatsListener : function(cb){
+			statsListener.push(cb);
+		},
+		getStats : function(){
+			return {
+				attempts : num_attempts,
+				angle : rot_degree
+			};
+		}
     };
     return ks;
   };

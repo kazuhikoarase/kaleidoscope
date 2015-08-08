@@ -57,6 +57,9 @@
                     bg = '#000000';
                 }
                 var ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
+				ks.addStatsListener(function(){
+					console.log(ks.getStats());
+				});
             }
         });
     </script>
