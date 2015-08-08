@@ -1,124 +1,122 @@
 <!doctype html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
 
-		<!-- Include jQuery Mobile stylesheets -->
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
 
-		<!-- Include the jQuery library -->
-		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- Include jQuery Mobile stylesheets -->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 
-		<!-- Include the jQuery Mobile library -->
-		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <!-- Include the jQuery library -->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
-		<style type="text/css">
-BODY {
-	font-family: arial, sans-serif;
-}
+    <!-- Include the jQuery Mobile library -->
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-.imglist{
-	display:none;
-}
-#cv{
-	position : absolute;
-	top : 0px;
-	left : 0px;
-}
-		</style>
-		<script type="text/javascript" src="kaleidoscope.js"></script>
-		<script type="text/javascript">
+    <style type="text/css">
+        BODY {
+            font-family: arial, sans-serif;
+        }
+        .imglist {
+            display: none;
+        }
+        #cv {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+        .btn {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" src="kaleidoscope.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-$(document).ready(function(){
-	$('#btn-cross').click(function(){
-		switchImg("img-cross");
-	});
-	$('#btn-snow').click(function(){
-		switchImg("img-snow");
-	});
-	$('#btn-atoms').click(function(){
-		switchImg("img-atoms");
-	});
-	$('#btn-amon').click(function(){
-		switchImg("img-amon",'#eeeeee');
-	});
-	switchImg("img-cross");
-});
+            var rotate = true,
+                shape = 'triangle',
+                img = "cross",
+                bg = '#000000';
 
-function switchImg(i,bg){
-	var ctx = $('canvas')[0].getContext('2d');
-	var imageSrcList = $('#' + i).html().replace(/^\s+|\s+$/g,'').split(/\s+/g);
-	var ks = kaleidoscope(ctx, imageSrcList, bg?bg:'#000000',false,'triangle');
-}
+			$("#btn-set-done").click(function(){
+				img = $("select")[0].value;
+				
+				rotate = $("#rotate")[0].checked;
+				shape = $("#triangle")[0].checked ? "triangle" : "square";
+				updateScreen();
+			});
+			updateScreen();
 
-		</script>
-		<title>万花筒</title>
-	</head>
-	<body>
-		<div class="imglist" id="img-amon">
-					assets/amon1.png
-					assets/amon2.png
-					assets/amon3.png
-					assets/amon4.png
-					assets/amon5.png
-					assets/amon6.png
-		</div>
-		<div class="imglist" id="img-atoms">
-					assets/atom1.png
-					assets/atom2.png
-					assets/atom3.png
-					assets/atom4.png
-					assets/atom5.png
-		</div>
-		<div class="imglist" id="img-cross">
-					assets/b.png
-					assets/c.png
-					assets/g.png
-					assets/m.png
-					assets/o.png
-					assets/p.png
-					assets/r.png
-					assets/y.png
-		</div>
-		<div class="imglist" id="img-snow">
-					assets/snowflake1.png
-					assets/snowflake2.png
-					assets/snowflake3.png
-					assets/snowflake4.png
-					assets/snowflake5.png
-		</div>
+            function updateScreen() {
+                var imgList = $('#img-' + img).html().replace(/^\s+|\s+$/g, '').split(/\s+/g);
 
-		<div id="home" data-role="page">
-			<div data-role="main" class="ui-content">
-				<canvas id="cv">
-				</canvas>
-				<a href="#dialog" class="ui-btn ui-btn-inline" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
-			</div>
-		</div>
+                if ('amon' === img) {
+                    bg = '#eeeeee';
+                } else {
+                    bg = '#000000';
+                }
+                var ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
+            }
+        });
+    </script>
+    <title>万花筒</title>
+</head>
 
-		<div data-role="page" data-dialog="true" id="dialog">
-			<div data-role="header">
-				<h1>选择图案</h1>
-			</div>
-			<div data-role="main" class="ui-content">
-				<a id="btn-cross" href="#home" class="ui-btn ui-btn-inline">
-					<img src="assets/b.png" alt="" width="26" height="26">
-					绚丽十字
-				</a>
-				<a id="btn-snow" href="#home" class="ui-btn ui-btn-inline">
-					<img src="assets/snowflake1.png" alt="" width="26" height="26">
-					缤纷雪花
-				</a>
-				<a id="btn-atoms" href="#home" class="ui-btn ui-btn-inline">
-					<img src="assets/atom1.png" alt="" width="26" height="26">
-					运转原子
-				</a>
-				<a id="btn-amon" href="#home" class="ui-btn ui-btn-inline">
-					<img src="assets/amon1.png" alt="" width="26" height="26">
-					多拉A梦
-				</a>
-			</div>
-		</div>
-	</body>
+<body>
+    <div class="imglist" id="img-amon">
+        assets/amon1.png assets/amon2.png assets/amon3.png assets/amon4.png assets/amon5.png assets/amon6.png
+    </div>
+    <div class="imglist" id="img-atoms">
+        assets/atom1.png assets/atom2.png assets/atom3.png assets/atom4.png assets/atom5.png
+    </div>
+    <div class="imglist" id="img-cross">
+        assets/b.png assets/c.png assets/g.png assets/m.png assets/o.png assets/p.png assets/r.png assets/y.png
+    </div>
+    <div class="imglist" id="img-snow">
+        assets/snowflake1.png assets/snowflake2.png assets/snowflake3.png assets/snowflake4.png assets/snowflake5.png
+    </div>
+
+    <div id="home" data-role="page">
+        <div data-role="main" class="ui-content">
+            <canvas id="cv">
+            </canvas>
+            <a href="#dialog" class="ui-btn ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
+        </div>
+    </div>
+
+    <div data-role="page" data-dialog="true" id="dialog">
+        <div data-role="header">
+            <h1>设置</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <label for="img">选择图案：</label>
+            <select name="img" id="img">
+                <option value="cross" selected>
+                    绚丽十字
+                </option>
+                <option value="snow">
+                    缤纷雪花
+                </option>
+                <option value="atoms">
+                    运转原子
+                </option>
+                <option value="amon">
+                    多拉A梦
+                </option>
+            </select>
+            <label for="rotate">手控旋转：</label>
+            <input type="checkbox" data-role="flipswitch" name="rotate" id="rotate" checked>
+            <fieldset data-role="controlgroup">
+                <legend>选择镜筒形状：</legend>
+                <label for="square">方形</label>
+                <input type="radio" name="shape" id="square" value="square">
+                <label for="triangle">三角形</label>
+                <input type="radio" name="shape" id="triangle" value="triangle" checked>
+            </fieldset>
+            <a id="btn-set-done" href="#home" class="ui-btn ui-shadow" data-transition="fade">确定</a>
+        </div>
+    </div>
+</body>
+
 </html>
