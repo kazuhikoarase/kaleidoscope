@@ -162,7 +162,7 @@ var kaleidoscope = function() {
 
     var init = function(images) {
 
-      content = createContent(rect, ox, oy, images, 32);
+      content = createContent(rect, ox, oy, images, 64);
 
       var render = function() {
   
