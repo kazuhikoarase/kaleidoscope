@@ -193,9 +193,11 @@ var kaleidoscope = function() {
         }
         content.setDeltaAngle(deltaAngle);
         
-        anim_id = requestAnimationFrame(render);
+        //anim_id = requestAnimationFrame(render);
+		setTimeout(render, 1000/60);
       };
-      render();
+      //anim_id = requestAnimationFrame(render);
+	  render();
     };
 
 	//use cx and cy as the origin, 
