@@ -166,8 +166,11 @@ var kaleidoscope = function() {
 
       content = createContent(rect, ox, oy, images, 32);
 
-      var render = function() {
+	  var lastStamp = 0;
+      var render = function(timeStamp) {
   
+		var timeSpan = timeStamp - lastStamp;
+		lastStamp = timeStamp;
         var size = ks.getSize();
         updateSize(size.width, size.height);
 		if(shape === 'square'){
@@ -176,16 +179,18 @@ var kaleidoscope = function() {
 			updateTriangleDisplay(size.width, size.height);
 		}
   
-        if (!pressed && deltaAngle !== 0) {
-          angle += deltaAngle;
+		var dist = deltaAngle / (1000 / 60) * timeSpan;
+        if (!pressed && dist !== 0) {
+          angle += dist;
 		  //delta angle loss 0.99
           deltaAngle *= 0.99;
         }
-        content.setDeltaAngle(deltaAngle);
+        content.setDeltaAngle( dist );
         
         anim_id = requestAnimationFrame(render);
       };
-      render();
+      anim_id = requestAnimationFrame(render);
+	  //render();
     };
 
 	//use cx and cy as the origin, 
