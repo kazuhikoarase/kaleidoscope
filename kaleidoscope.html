@@ -26,30 +26,85 @@
             top: 0px;
             left: 0px;
         }
+        #footer {
+            background-color: rgba(0, 0, 0, 0);
+            border: none;
+            float: left;
+        }
+        .score {
+            background-color: rgba(211, 215, 207, 0.5);
+            text-align: center;
+            border-radius: 2em;
+        }
+        .pi_count {
+            color: rgb(78, 154, 6);
+        }
+        .atmp_count {
+            color: rgb(206, 92, 0);
+        }
+        .timer_count {
+            color: rgb(92, 53, 102);
+        }
         .btn {
             text-align: center;
+        }
+        .inline {
+            display: inline;
+        }
+        .hide {
+            display: none;
+        }
+        #submit {
+            padding: 5px;
+            padding-left: 25px;
+            padding-right: 25px;
+            margin-right: 10px;
+            opacity: 0.5;
         }
     </style>
     <script type="text/javascript" src="kaleidoscope.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            $("form").submit(function(e) {
+                console.log(e);
+            });
+            $(".hide").parent().hide();
 
             var rotate = true,
                 shape = 'triangle',
                 img = "cross",
                 bg = '#000000',
-				ks;
+                ks,
+                stats = {
+                    pi_count: 0,
+                    atmp_count: 0,
+                    timer_count: 0
+                },
+                curStats = {
+                    pi_count: 0,
+                    atmp_count: 0,
+                    timer_count: 0
+                };
 
-			$("#btn-set-done").click(function(){
-				if(ks){
-					ks.destroy();
-				}
-				img = $("select")[0].value;
-				rotate = $("#rotate")[0].checked;
-				shape = $("#triangle")[0].checked ? "triangle" : "square";
-				updateScreen();
-			});
-			updateScreen();
+            $("#btn-set-done").click(function() {
+                if (ks) {
+                    ks.destroy();
+                }
+                img = $("select")[0].value;
+                rotate = $("#rotate")[0].checked;
+                shape = $("#triangle")[0].checked ? "triangle" : "square";
+                updateScreen();
+            });
+            updateScreen();
+            countTime();
+
+
+            function countTime() {
+                stats.timer_count += 1;
+                $('.timer_count').html((stats.timer_count));
+				$('input[name="timer"]').val(stats.timer_count);
+                setTimeout(countTime, 1000);
+            }
 
             function updateScreen() {
                 var imgList = $('#img-' + img).html().replace(/^\s+|\s+$/g, '').split(/\s+/g);
@@ -60,15 +115,23 @@
                     bg = '#000000';
                 }
 
+                stats.pi_count += curStats.pi_count;
+                stats.atmp_count += curStats.atmp_count;
+                stats.timer_count += curStats.timer_count;
 
                 ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
-				ks.addStatsListener(function(){
-					console.log(ks.getStats());
-				});
+                ks.addStatsListener(function() {
+                    curStats.pi_count = Math.floor(ks.getStats().angle / 360);
+                    curStats.atmp_count = ks.getStats().attempts;
+                    $('.pi_count').html((stats.pi_count + curStats.pi_count));
+					$('input[name="pi"]').val(stats.pi_count + curStats.pi_count);
+                    $('.atmp_count').html((stats.atmp_count + curStats.atmp_count));
+					$('input[name="atmp"]').val(stats.atmp_count + curStats.atmp_count);
+                });
             }
         });
     </script>
-    <title>万花筒</title>
+    <title>微游戏之忆童年万花筒</title>
 </head>
 
 <body>
@@ -87,9 +150,38 @@
 
     <div id="home" data-role="page">
         <div data-role="main" class="ui-content">
-			<canvas id="cv">你的浏览器不支持HTML5</canvas>
+            <canvas id="cv">你的浏览器不支持HTML5</canvas>
             <a href="#dialog" class="ui-btn ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
         </div>
+        <div id="footer" data-role="footer" data-position="fixed">
+            <form action="#">
+                    <div>
+                        <input class="hide" type="text" name="pi" value="0">
+                    </div>
+                    <div>
+                        <input class="hide" type="text" name="atmp" value="0">
+                    </div>
+                    <div>
+                        <input class="hide" type="text" name="timer" value="0">
+                    </div>
+                <div class="inline score">
+					<span class="pi_count">0</span>圈
+                </div>
+                <div class="inline score" >
+					<br><span class="atmp_count">0</span>次
+                </div>
+                <div class="inline score">
+					<br><span class="timer_count">0</span>秒
+                </div>
+                <div class="inline " style="float:right">
+                    <button id="submit" type="submit" class="ui-mini">无聊，玩够了！</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div data-role="page" id="done">
+
     </div>
 
     <div data-role="page" data-dialog="true" id="dialog">
@@ -112,7 +204,7 @@
                     多拉A梦
                 </option>
             </select>
-            <label for="rotate">手控旋转：</label>
+            <label for="rotate">屏幕旋转：</label>
             <input type="checkbox" data-role="flipswitch" name="rotate" id="rotate" checked>
             <fieldset data-role="controlgroup">
                 <legend>选择镜筒形状：</legend>
