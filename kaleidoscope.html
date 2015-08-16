@@ -65,9 +65,7 @@
     <script type="text/javascript" src="kaleidoscope.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("form").submit(function(e) {
-                console.log(e);
-            });
+
             $(".hide").parent().hide();
 
             var rotate = true,
@@ -86,6 +84,24 @@
                     timer_count: 0
                 };
 
+			$("#footer a").click(function(){
+				var tm = curStats.timer_count + stats.timer_count;
+				$("#rsh").html(tm);
+				$("#rph").html((curStats.pi_count + stats.timer_count) * 360);
+				$("#rah").html(curStats.atmp_count + stats.atmp_count);
+				var high = "您的时间碎片率为<span style=\"color:red\">高<"+"/span>，请注意管理自己的时间！";
+				var med = "您的时间碎片率为<span style=\"color:green\">中<"+"/span>，您可以更多思考人生理想！";
+				var low = "您的时间碎片率为<span style=\"color:blue\">低<"+"/span>，请注意适当放松自己！";
+				var rep = low;
+				if(tm > 30){
+					rep = med;
+				} 
+				if( tm > 180){
+					rep = high;
+				}
+				$("#segrate").html(rep);
+			});
+
             $("#btn-set-done").click(function() {
                 if (ks) {
                     ks.destroy();
@@ -95,18 +111,17 @@
                 shape = $("#triangle")[0].checked ? "triangle" : "square";
                 updateScreen();
             });
-            updateScreen();
-            countTime();
+            updateScreen(countTime);
 
 
             function countTime() {
                 stats.timer_count += 1;
                 $('.timer_count').html((stats.timer_count));
-				$('input[name="timer"]').val(stats.timer_count);
+                $('input[name="timer"]').val(stats.timer_count);
                 setTimeout(countTime, 1000);
             }
 
-            function updateScreen() {
+            function updateScreen(cb) {
                 var imgList = $('#img-' + img).html().replace(/^\s+|\s+$/g, '').split(/\s+/g);
 
                 if ('amon' === img) {
@@ -119,14 +134,14 @@
                 stats.atmp_count += curStats.atmp_count;
                 stats.timer_count += curStats.timer_count;
 
-                ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
+                ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape,cb);
                 ks.addStatsListener(function() {
                     curStats.pi_count = Math.floor(ks.getStats().angle / 360);
                     curStats.atmp_count = ks.getStats().attempts;
                     $('.pi_count').html((stats.pi_count + curStats.pi_count));
-					$('input[name="pi"]').val(stats.pi_count + curStats.pi_count);
+                    $('input[name="pi"]').val(stats.pi_count + curStats.pi_count);
                     $('.atmp_count').html((stats.atmp_count + curStats.atmp_count));
-					$('input[name="atmp"]').val(stats.atmp_count + curStats.atmp_count);
+                    $('input[name="atmp"]').val(stats.atmp_count + curStats.atmp_count);
                 });
             }
         });
@@ -151,38 +166,39 @@
     <div id="home" data-role="page">
         <div data-role="main" class="ui-content">
             <canvas id="cv">你的浏览器不支持HTML5</canvas>
-            <a href="#dialog" class="ui-btn ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
+            <a href="#dialog" class="ui-btn ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition="fade" style="z-index:0;opacity : 0.75">选择图案</a>
         </div>
         <div id="footer" data-role="footer" data-position="fixed">
-            <form action="#">
-                    <div>
-                        <input class="hide" type="text" name="pi" value="0">
-                    </div>
-                    <div>
-                        <input class="hide" type="text" name="atmp" value="0">
-                    </div>
-                    <div>
-                        <input class="hide" type="text" name="timer" value="0">
-                    </div>
-                <div class="inline score">
-					<span class="pi_count">0</span>圈
-                </div>
-                <div class="inline score" >
-					<br><span class="atmp_count">0</span>次
-                </div>
-                <div class="inline score">
-					<br><span class="timer_count">0</span>秒
-                </div>
-                <div class="inline " style="float:right">
-                    <button id="submit" type="submit" class="ui-mini">无聊，玩够了！</button>
-                </div>
-            </form>
+            <div>
+                <input class="hide" type="text" name="pi" value="0">
+            </div>
+            <div>
+                <input class="hide" type="text" name="atmp" value="0">
+            </div>
+            <div>
+                <input class="hide" type="text" name="timer" value="0">
+            </div>
+            <div class="inline score">
+                <span class="pi_count">0</span>圈
+            </div>
+            <div class="inline score">
+                <br><span class="atmp_count">0</span>次
+            </div>
+            <div class="inline score">
+                <br><span class="timer_count">0</span>秒
+            </div>
+            <div class="inline " style="float:right">
+                <a href="#report" data-rel="popup" class="ui-btn ui-mini" style="opacity:0.5">无聊，玩够了！</a>
+            </div>
+        </div>
+         <div data-role="popup" data-arrow="b" id="report" class="ui-content">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+			<p>你用了<span id="rah">0</span>次、<span id="rsh">0</span>秒、旋转了万花筒<span id="rph">0</span>度。</p>
+			<p id="segrate">_</p>
+            <a href="asddf" data-rel="back" class="ui-btn ui-corner-all ui-shadow">再玩一会儿</a>
         </div>
     </div>
 
-    <div data-role="page" id="done">
-
-    </div>
 
     <div data-role="page" data-dialog="true" id="dialog">
         <div data-role="header">
@@ -213,7 +229,7 @@
                 <label for="triangle">三角形</label>
                 <input type="radio" name="shape" id="triangle" value="triangle" checked>
             </fieldset>
-            <a id="btn-set-done" href="#home" class="ui-btn ui-shadow" data-transition="fade">确定</a>
+            <a id="btn-set-done" href="#home" class="ui-btn ui-shadow" data-transition="fade" data-theme="b">确定</a>
         </div>
     </div>
 </body>

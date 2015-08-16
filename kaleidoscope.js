@@ -135,7 +135,7 @@ var kaleidoscope = function() {
     };
   };
 
-  return function(ctx, imageSrcList, bgColor,rotScreen,shape) {
+  return function(ctx, imageSrcList, bgColor,rotScreen,shape,callback) {
 	var anim_id = 0;
 	var statsListener = [];
 	var num_attempts = 0;
@@ -172,7 +172,7 @@ var kaleidoscope = function() {
 
     var init = function(images) {
 
-      content = createContent(rect, ox, oy, images, 32);
+      content = createContent(rect, ox, oy, images, 55);
 
 	  var lastStamp = 0;
       var render = function(timeStamp) {
@@ -202,6 +202,9 @@ var kaleidoscope = function() {
       };
       anim_id = requestAnimationFrame(render);
 	  //render();
+	  if(callback){
+		  callback();
+	  }
     };
 
 	//use cx and cy as the origin, 
