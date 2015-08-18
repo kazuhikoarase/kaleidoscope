@@ -1,124 +1,63 @@
 <!doctype html>
 <html>
-
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<style type="text/css">
+BODY {
+  font-family: arial, sans-serif;
+}
+</style>
+<script type="text/javascript" src="kaleidoscope.js"></script>
+<script type="text/javascript">
 
-    <!-- Include jQuery Mobile stylesheets -->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+window.onload = function() {
 
-    <!-- Include the jQuery library -->
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  var ctx = document.getElementById('cv').getContext('2d');
+  var imageSrcList = ctx.canvas.innerHTML.
+    replace(/^\s+|\s+$/g,'').split(/\s+/g);
+  var ks = kaleidoscope(ctx, imageSrcList, '#000000');
+  var normalSize = function() {
+    return { width: 400, height: 400 };
+  };
+  var fullScreen = function() {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+  };
+  ks.getSize = normalSize;
 
-    <!-- Include the jQuery Mobile library -->
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  ctx.canvas.addEventListener('dblclick', function() {
+    if (ks.getSize == normalSize) {
+      ks.getSize = fullScreen;
+      ctx.canvas.style.position = 'absolute';
+      ctx.canvas.style.left = '0px';
+      ctx.canvas.style.top = '0px';
+    } else {
+      ks.getSize = normalSize;
+      ctx.canvas.style.position = 'static';
+    }
+  });
+};
 
-    <style type="text/css">
-        BODY {
-            font-family: arial, sans-serif;
-        }
-        .imglist {
-            display: none;
-        }
-        #cv {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-        }
-        .btn {
-            text-align: center;
-        }
-    </style>
-    <script type="text/javascript" src="kaleidoscope.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-            var rotate = true,
-                shape = 'triangle',
-                img = "cross",
-                bg = '#000000',
-				ks;
-
-			$("#btn-set-done").click(function(){
-				if(ks){
-					ks.destroy();
-				}
-				img = $("select")[0].value;
-				rotate = $("#rotate")[0].checked;
-				shape = $("#triangle")[0].checked ? "triangle" : "square";
-				updateScreen();
-			});
-			updateScreen();
-
-            function updateScreen() {
-                var imgList = $('#img-' + img).html().replace(/^\s+|\s+$/g, '').split(/\s+/g);
-
-                if ('amon' === img) {
-                    bg = '#eeeeee';
-                } else {
-                    bg = '#000000';
-                }
-                ks = kaleidoscope($("#cv")[0].getContext('2d'), imgList, bg, rotate, shape);
-            }
-        });
-    </script>
-    <title>万花筒</title>
+</script>
+<title>kaleidoscope</title>
 </head>
-
 <body>
-    <div class="imglist" id="img-amon">
-        assets/amon1.png assets/amon2.png assets/amon3.png assets/amon4.png assets/amon5.png assets/amon6.png
-    </div>
-    <div class="imglist" id="img-atoms">
-        assets/atom1.png assets/atom2.png assets/atom3.png assets/atom4.png assets/atom5.png
-    </div>
-    <div class="imglist" id="img-cross">
-        assets/b.png assets/c.png assets/g.png assets/m.png assets/o.png assets/p.png assets/r.png assets/y.png
-    </div>
-    <div class="imglist" id="img-snow">
-        assets/snowflake1.png assets/snowflake2.png assets/snowflake3.png assets/snowflake4.png assets/snowflake5.png
-    </div>
-
-    <div id="home" data-role="page">
-        <div data-role="main" class="ui-content">
-			<canvas id="cv">你的浏览器不支持HTML5</canvas>
-            <a href="#dialog" class="ui-btn ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition="fade" style="z-index:0;opacity : 0.5">选择图案</a>
-        </div>
-    </div>
-
-    <div data-role="page" data-dialog="true" id="dialog">
-        <div data-role="header">
-            <h1>设置</h1>
-        </div>
-        <div data-role="main" class="ui-content">
-            <label for="img">选择图案：</label>
-            <select name="img" id="img">
-                <option value="cross" selected>
-                    绚丽十字
-                </option>
-                <option value="snow">
-                    缤纷雪花
-                </option>
-                <option value="atoms">
-                    运转原子
-                </option>
-                <option value="amon">
-                    多拉A梦
-                </option>
-            </select>
-            <label for="rotate">手控旋转：</label>
-            <input type="checkbox" data-role="flipswitch" name="rotate" id="rotate" checked>
-            <fieldset data-role="controlgroup">
-                <legend>选择镜筒形状：</legend>
-                <label for="square">方形</label>
-                <input type="radio" name="shape" id="square" value="square">
-                <label for="triangle">三角形</label>
-                <input type="radio" name="shape" id="triangle" value="triangle" checked>
-            </fieldset>
-            <a id="btn-set-done" href="#home" class="ui-btn ui-shadow" data-transition="fade">确定</a>
-        </div>
-    </div>
+<h1>kaleidoscope</h1>
+<p>
+double-click to full screen mode.
+</p>
+<canvas id="cv">
+assets/b.png
+assets/c.png
+assets/g.png
+assets/m.png
+assets/o.png
+assets/p.png
+assets/r.png
+assets/y.png
+</canvas>
 </body>
-
 </html>
