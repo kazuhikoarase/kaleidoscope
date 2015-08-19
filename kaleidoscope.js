@@ -135,10 +135,10 @@ var kaleidoscope = function() {
     };
   };
 
-  return function(ctx, imageSrcList, bgColor,rotScreen,shape,callback) {
+  return function(ctx, imageSrcList, bgColor, rotScreen, shape, callback) {
     var anim_id = 0;
 
-    var rect = 160,len,ox,oy;
+    var rect = 160, len, ox, oy;
 
     if(shape === 'square'){
       len = Math.sin(Math.PI/4) * rect;
@@ -312,6 +312,7 @@ var kaleidoscope = function() {
     };
 
     var updateSquareDisplay = function(w, h){
+
       content.moveAll();
 
       // render
@@ -321,31 +322,30 @@ var kaleidoscope = function() {
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, w, h);
       }
-      var diag = Math.sqrt( h*h + w*w );
-      var sqrs = Math.ceil( diag / len) + 1;
+      var diag = Math.sqrt(h * h + w * w);
+      var sqrs = Math.ceil(diag / len) + 1;
       ctx.save();
       //rotate screen
       if(rotScreen){
-        ctx.translate((w-diag)/2,(h-diag)/2);
-        ctx.translate(diag/2,diag/2);
+        ctx.translate( (w - diag) / 2, (h - diag) / 2);
+        ctx.translate(diag / 2, diag / 2);
         ctx.rotate(angle);
-        ctx.translate(-diag/2,-diag/2);
+        ctx.translate(-diag / 2, -diag / 2);
       } 
 
       for(var i = 0; i < sqrs; i++){
         for(var j = 0; j < sqrs; j++){
-          drawSquareUnit(i * len, j * len,len,
-            i,
-            j);
+          drawSquareUnit(i * len, j * len, len, i, j);
         }
       }
       ctx.restore();
     };
 
-    var drawSquareUnit = function(x,y,l,i,j){
+    var drawSquareUnit = function(x, y, l, i, j){
+
       ctx.save();
 
-      var scale_x,scale_y,trans_x,trans_y;
+      var scale_x, scale_y, trans_x, trans_y;
 
       if(i % 2 === 0){
         scale_x = 1;
@@ -370,7 +370,7 @@ var kaleidoscope = function() {
       //
       // the upper left coner of clip area has
       // an offset against the outer rectangle.
-      ctx.translate(-(rect - len )/ 2,-(rect - len )/ 2);
+      ctx.translate(-(rect - len ) / 2, -(rect - len ) / 2);
       //rotate to make outer rect counteract againt
       //the rotating scene.
       ctx.translate(ox,oy);
