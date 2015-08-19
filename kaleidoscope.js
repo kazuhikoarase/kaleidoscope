@@ -140,7 +140,7 @@ var kaleidoscope = function() {
 
     var rect = 160, len, ox, oy;
 
-    if(shape === 'square'){
+    if (shape === 'square') {
       len = Math.sin(Math.PI/4) * rect;
       ox = rect / 2;
       oy = rect / 2;
@@ -172,7 +172,7 @@ var kaleidoscope = function() {
         lastStamp = timeStamp;
         var size = ks.getSize();
         updateSize(size.width, size.height);
-        if(shape === 'square'){
+        if (shape === 'square') {
             updateSquareDisplay(size.width, size.height);
         } else {
             updateTriangleDisplay(size.width, size.height);
@@ -190,7 +190,7 @@ var kaleidoscope = function() {
       };
       anim_id = requestAnimationFrame(render);
       //render();
-      if(callback){
+      if (callback) {
         callback();
       }
     };
@@ -275,8 +275,8 @@ var kaleidoscope = function() {
 
       ctx.save();
 
-         ctx.translate(x, y);
-      if(rotScreen){
+      ctx.translate(x, y);
+      if (rotScreen) {
         ctx.rotate(angle);
       }
       ctx.translate(-ox, -oy);
@@ -300,7 +300,7 @@ var kaleidoscope = function() {
 
       // adjust
       ctx.translate(ox, oy);
-      if(rotScreen) {
+      if (rotScreen) {
         ctx.rotate(-angle);
       }
 
@@ -311,7 +311,7 @@ var kaleidoscope = function() {
       ctx.restore();
     };
 
-    var updateSquareDisplay = function(w, h){
+    var updateSquareDisplay = function(w, h) {
 
       content.moveAll();
 
@@ -326,28 +326,28 @@ var kaleidoscope = function() {
       var sqrs = Math.ceil(diag / len) + 1;
       ctx.save();
       //rotate screen
-      if(rotScreen){
+      if (rotScreen) {
         ctx.translate( (w - diag) / 2, (h - diag) / 2);
         ctx.translate(diag / 2, diag / 2);
         ctx.rotate(angle);
         ctx.translate(-diag / 2, -diag / 2);
       } 
 
-      for(var i = 0; i < sqrs; i++){
-        for(var j = 0; j < sqrs; j++){
+      for(var i = 0; i < sqrs; i++) {
+        for(var j = 0; j < sqrs; j++) {
           drawSquareUnit(i * len, j * len, len, i, j);
         }
       }
       ctx.restore();
     };
 
-    var drawSquareUnit = function(x, y, l, i, j){
+    var drawSquareUnit = function(x, y, l, i, j) {
 
       ctx.save();
 
       var scale_x, scale_y, trans_x, trans_y;
 
-      if(i % 2 === 0){
+      if (i % 2 === 0) {
         scale_x = 1;
         trans_x = x;
       } else {
@@ -355,17 +355,17 @@ var kaleidoscope = function() {
         trans_x = x + l;
       }
 
-      if(j % 2 === 0){
+      if (j % 2 === 0) {
         scale_y = 1;
         trans_y = y;
       } else {
         scale_y = -1;
         trans_y = y + l;
       }
-      ctx.translate(trans_x,trans_y);
-      ctx.scale(scale_x,scale_y);
+      ctx.translate(trans_x, trans_y);
+      ctx.scale(scale_x, scale_y);
       ctx.beginPath();
-      ctx.rect(0,0,l,l);
+      ctx.rect(0, 0, l, l);
       ctx.clip();
       //
       // the upper left coner of clip area has
@@ -373,13 +373,13 @@ var kaleidoscope = function() {
       ctx.translate(-(rect - len ) / 2, -(rect - len ) / 2);
       //rotate to make outer rect counteract againt
       //the rotating scene.
-      ctx.translate(ox,oy);
-      if(rotScreen) {
+      ctx.translate(ox, oy);
+      if (rotScreen) {
         ctx.rotate(-angle);
       }
-      ctx.translate(-ox,-oy);
+      ctx.translate(-ox, -oy);
 
-      ctx.drawImage(content.canvas,0,0);
+      ctx.drawImage(content.canvas, 0, 0);
       ctx.restore();
 
     };
@@ -396,8 +396,8 @@ var kaleidoscope = function() {
       var n = Math.ceil(Math.sqrt(w * w + h * h) / 2 / len) + 1;
       //replace variable angle with 0, to cease the canvas
       //from rotating.
-      var mxx,mxy,myx,myy;
-      if(rotScreen){
+      var mxx, mxy, myx, myy;
+      if (rotScreen) {
         mxx = Math.cos(angle) * len;
         mxy = Math.sin(angle) * len;
         myx = Math.cos(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
@@ -437,8 +437,8 @@ var kaleidoscope = function() {
           height: window.innerHeight
         };
       },
-      destroy: function(){
-        if(anim_id){
+      destroy: function() {
+        if (anim_id) {
           cancelAnimationFrame(anim_id);
         }
       }
