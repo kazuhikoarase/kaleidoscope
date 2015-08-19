@@ -136,20 +136,20 @@ var kaleidoscope = function() {
   };
 
   return function(ctx, imageSrcList, bgColor,rotScreen,shape,callback) {
-	var anim_id = 0;
+    var anim_id = 0;
 
     var rect = 160,len,ox,oy;
 
-	if(shape === 'square'){
-		len = Math.sin(Math.PI/4) * rect;
-		ox = rect / 2;
-		oy = rect / 2;
-	} else {
-		len = rect * Math.sqrt(3) / 2;
-		ox = len / 2;
-		oy = len / Math.sqrt(3) / 2;
-	}
-	
+    if(shape === 'square'){
+      len = Math.sin(Math.PI/4) * rect;
+      ox = rect / 2;
+      oy = rect / 2;
+    } else {
+      len = rect * Math.sqrt(3) / 2;
+      ox = len / 2;
+      oy = len / Math.sqrt(3) / 2;
+    }
+    
 
     var angle = 0;
     var deltaAngle = 0;
@@ -161,44 +161,43 @@ var kaleidoscope = function() {
       init(images);
     } );
 
-
     var init = function(images) {
 
       content = createContent(rect, ox, oy, images, 55);
 
-	  var lastStamp = 0;
+      var lastStamp = 0;
       var render = function(timeStamp) {
   
-		var timeSpan = timeStamp - lastStamp;
-		lastStamp = timeStamp;
+        var timeSpan = timeStamp - lastStamp;
+        lastStamp = timeStamp;
         var size = ks.getSize();
         updateSize(size.width, size.height);
-		if(shape === 'square'){
-			updateSquareDisplay(size.width, size.height);
-		} else {
-			updateTriangleDisplay(size.width, size.height);
-		}
+        if(shape === 'square'){
+            updateSquareDisplay(size.width, size.height);
+        } else {
+            updateTriangleDisplay(size.width, size.height);
+        }
   
-		var dist = deltaAngle / (1000 / 60) * timeSpan;
+        var dist = deltaAngle / (1000 / 60) * timeSpan;
         if (!pressed && dist !== 0) {
           angle += dist;
-		  //delta angle loss 0.99
+          //delta angle loss 0.99
           deltaAngle *= 0.99;
         }
         content.setDeltaAngle( dist );
-        
+
         anim_id = requestAnimationFrame(render);
       };
       anim_id = requestAnimationFrame(render);
-	  //render();
-	  if(callback){
-		  callback();
-	  }
+      //render();
+      if(callback){
+        callback();
+      }
     };
 
-	//use cx and cy as the origin, 
-	// first map p to the new origin
-	// then, get the angle of the mapped point p to X axis(Math.atan2)
+    //use cx and cy as the origin, 
+    // first map p to the new origin
+    // then, get the angle of the mapped point p to X axis(Math.atan2)
     var getAngle = function(p) {
       var cx = ctx.canvas.width / 2;
       var cy = ctx.canvas.height / 2;
@@ -215,7 +214,7 @@ var kaleidoscope = function() {
         var currAngle = getAngle(points[0]);
         deltaAngle = currAngle - holdAngle;
         holdAngle = currAngle;
-        angle += deltaAngle ;
+        angle += deltaAngle;
       }
     };
     var mouseup = function(points) {
@@ -276,23 +275,20 @@ var kaleidoscope = function() {
 
       ctx.save();
 
-		 ctx.translate(x, y);
-	  if(rotScreen){
-		  ctx.rotate(angle);
-	  }
-		  ctx.translate(-ox, -oy);
+         ctx.translate(x, y);
+      if(rotScreen){
+        ctx.rotate(angle);
+      }
+      ctx.translate(-ox, -oy);
 
-	  
       if (inv) {
         ctx.transform(1, 0, 0, -1, 0, 0);
       }
 
-	  
       for (var i = 0; i < rot; i += 1) {
         ctx.rotate(-Math.PI / 3 * 2);
         ctx.translate(-l, 0);
       }
-	  
 
       // clip triangle
       ctx.beginPath();
@@ -304,8 +300,9 @@ var kaleidoscope = function() {
 
       // adjust
       ctx.translate(ox, oy);
-	  if(rotScreen)
-      ctx.rotate(-angle);
+      if(rotScreen) {
+        ctx.rotate(-angle);
+      }
 
       // content
       ctx.translate(-rect / 2, -rect / 2);
@@ -314,77 +311,78 @@ var kaleidoscope = function() {
       ctx.restore();
     };
 
-	var updateSquareDisplay = function(w, h){
-		content.moveAll();
+    var updateSquareDisplay = function(w, h){
+      content.moveAll();
 
-		// render
-		ctx.clearRect(0, 0, w, h);
+      // render
+      ctx.clearRect(0, 0, w, h);
 
-		if (bgColor) {
-			ctx.fillStyle = bgColor;
-			ctx.fillRect(0, 0, w, h);
-		}
-		var diag = Math.sqrt( h*h + w*w );
-		var sqrs = Math.ceil( diag / len) + 1;
-		ctx.save();
-		//rotate screen
-		if(rotScreen){
-			ctx.translate((w-diag)/2,(h-diag)/2);
-			ctx.translate(diag/2,diag/2);
-			ctx.rotate(angle);
-			ctx.translate(-diag/2,-diag/2);
-		} 
+      if (bgColor) {
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, w, h);
+      }
+      var diag = Math.sqrt( h*h + w*w );
+      var sqrs = Math.ceil( diag / len) + 1;
+      ctx.save();
+      //rotate screen
+      if(rotScreen){
+        ctx.translate((w-diag)/2,(h-diag)/2);
+        ctx.translate(diag/2,diag/2);
+        ctx.rotate(angle);
+        ctx.translate(-diag/2,-diag/2);
+      } 
 
-		for(var i = 0; i < sqrs; i++){
-			for(var j = 0; j < sqrs; j++){
-				drawSquareUnit(i * len, j * len,len,
-						i,
-						j);
-			}
-		}
-		ctx.restore();
-	};
+      for(var i = 0; i < sqrs; i++){
+        for(var j = 0; j < sqrs; j++){
+          drawSquareUnit(i * len, j * len,len,
+            i,
+            j);
+        }
+      }
+      ctx.restore();
+    };
 
-	var drawSquareUnit = function(x,y,l,i,j){
-		ctx.save();
+    var drawSquareUnit = function(x,y,l,i,j){
+      ctx.save();
 
-		var scale_x,scale_y,trans_x,trans_y;
-		
-		if(i % 2 === 0){
-			scale_x = 1;
-			trans_x = x;
-		} else {
-			scale_x = -1;
-			trans_x = x + l;
-		}
+      var scale_x,scale_y,trans_x,trans_y;
 
-		if(j % 2 === 0){
-			scale_y = 1;
-			trans_y = y;
-		} else {
-			scale_y = -1;
-			trans_y = y + l;
-		}
-		ctx.translate(trans_x,trans_y);
-		ctx.scale(scale_x,scale_y);
-		ctx.beginPath();
-		ctx.rect(0,0,l,l);
-		ctx.clip();
-		//
-		// the upper left coner of clip area has
-		// an offset against the outer rectangle.
-		ctx.translate(-(rect - len )/ 2,-(rect - len )/ 2);
-		//rotate to make outer rect counteract againt
-		//the rotating scene.
-		ctx.translate(ox,oy);
-		if(rotScreen)
-		ctx.rotate(-angle);
-		ctx.translate(-ox,-oy);
+      if(i % 2 === 0){
+        scale_x = 1;
+        trans_x = x;
+      } else {
+        scale_x = -1;
+        trans_x = x + l;
+      }
 
-		ctx.drawImage(content.canvas,0,0);
-		ctx.restore();
+      if(j % 2 === 0){
+        scale_y = 1;
+        trans_y = y;
+      } else {
+        scale_y = -1;
+        trans_y = y + l;
+      }
+      ctx.translate(trans_x,trans_y);
+      ctx.scale(scale_x,scale_y);
+      ctx.beginPath();
+      ctx.rect(0,0,l,l);
+      ctx.clip();
+      //
+      // the upper left coner of clip area has
+      // an offset against the outer rectangle.
+      ctx.translate(-(rect - len )/ 2,-(rect - len )/ 2);
+      //rotate to make outer rect counteract againt
+      //the rotating scene.
+      ctx.translate(ox,oy);
+      if(rotScreen) {
+        ctx.rotate(-angle);
+      }
+      ctx.translate(-ox,-oy);
 
-	};
+      ctx.drawImage(content.canvas,0,0);
+      ctx.restore();
+
+    };
 
     var updateTriangleDisplay = function(w, h) {
 
@@ -396,20 +394,20 @@ var kaleidoscope = function() {
 
       // misc
       var n = Math.ceil(Math.sqrt(w * w + h * h) / 2 / len) + 1;
-	  //replace variable angle with 0, to cease the canvas
-	  //from rotating.
-	  var mxx,mxy,myx,myy;
-	  if(rotScreen){
-		  mxx = Math.cos(angle) * len;
-		  mxy = Math.sin(angle) * len;
-		  myx = Math.cos(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
-		  myy = Math.sin(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
-	  } else {
-		  mxx = Math.cos(0) * len;
-		  mxy = Math.sin(0) * len;
-		  myx = Math.cos(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
-		  myy = Math.sin(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
-	  }
+      //replace variable angle with 0, to cease the canvas
+      //from rotating.
+      var mxx,mxy,myx,myy;
+      if(rotScreen){
+        mxx = Math.cos(angle) * len;
+        mxy = Math.sin(angle) * len;
+        myx = Math.cos(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
+        myy = Math.sin(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
+      } else {
+        mxx = Math.cos(0) * len;
+        mxy = Math.sin(0) * len;
+        myx = Math.cos(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
+        myy = Math.sin(0 + Math.PI / 2) * len * Math.sqrt(3) / 2;
+      }
 
       // render
       ctx.clearRect(0, 0, w, h);
@@ -439,11 +437,11 @@ var kaleidoscope = function() {
           height: window.innerHeight
         };
       },
-		destroy : function(){
-			if(anim_id){
-				cancelAnimationFrame(anim_id);
-			}
-		}
+      destroy: function(){
+        if(anim_id){
+          cancelAnimationFrame(anim_id);
+        }
+      }
     };
     return ks;
   };
