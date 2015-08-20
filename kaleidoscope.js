@@ -135,12 +135,28 @@ var kaleidoscope = function() {
     };
   };
 
-  return function(ctx, imageSrcList, bgColor, rotScreen, shape, callback) {
+  var defaultOpts = {
+    bgColor: '#000000',
+    shape: 'triangle',
+    rotScreen: true,
+    postInitHandler: null,
+    renderHandler: null
+  };
+
+  return function(ctx, imageSrcList, userOpts) {
+
+    userOpts = userOpts || {};
+    var opts = {};
+    for (var k in defaultOpts) {
+      opts[k] = (typeof userOpts[k] != 'undefined')?
+          userOpts[k] : defaultOpts[k];
+    }
+
     var anim_id = 0;
 
     var rect = 160, len, ox, oy;
 
-    if (shape === 'square') {
+    if (opts.shape === 'square') {
       len = Math.sin(Math.PI/4) * rect;
       ox = rect / 2;
       oy = rect / 2;
@@ -178,7 +194,7 @@ var kaleidoscope = function() {
 
         var size = ks.getSize();
         updateSize(size.width, size.height);
-        if (shape === 'square') {
+        if (opts.shape === 'square') {
             updateSquareDisplay(size.width, size.height);
         } else {
             updateTriangleDisplay(size.width, size.height);
@@ -192,12 +208,16 @@ var kaleidoscope = function() {
         }
         content.setDeltaAngle( dist );
 
+        if (opts.renderHandler) {
+          opts.renderHandler(timeStamp);
+        }
+        
         anim_id = requestAnimationFrame(render);
       };
       anim_id = requestAnimationFrame(render);
-      //render();
-      if (callback) {
-        callback();
+
+      if (opts.postInitHandler) {
+        opts.postInitHandler();
       }
     };
 
@@ -282,7 +302,7 @@ var kaleidoscope = function() {
       ctx.save();
 
       ctx.translate(x, y);
-      if (rotScreen) {
+      if (opts.rotScreen) {
         ctx.rotate(angle);
       }
       ctx.translate(-ox, -oy);
@@ -306,7 +326,7 @@ var kaleidoscope = function() {
 
       // adjust
       ctx.translate(ox, oy);
-      if (rotScreen) {
+      if (opts.rotScreen) {
         ctx.rotate(-angle);
       }
 
@@ -324,15 +344,15 @@ var kaleidoscope = function() {
       // render
       ctx.clearRect(0, 0, w, h);
 
-      if (bgColor) {
-        ctx.fillStyle = bgColor;
+      if (opts.bgColor) {
+        ctx.fillStyle = opts.bgColor;
         ctx.fillRect(0, 0, w, h);
       }
       var diag = Math.sqrt(h * h + w * w);
       var sqrs = Math.ceil(diag / len) + 1;
       ctx.save();
       //rotate screen
-      if (rotScreen) {
+      if (opts.rotScreen) {
         ctx.translate( (w - diag) / 2, (h - diag) / 2);
         ctx.translate(diag / 2, diag / 2);
         ctx.rotate(angle);
@@ -380,7 +400,7 @@ var kaleidoscope = function() {
       //rotate to make outer rect counteract againt
       //the rotating scene.
       ctx.translate(ox, oy);
-      if (rotScreen) {
+      if (opts.rotScreen) {
         ctx.rotate(-angle);
       }
       ctx.translate(-ox, -oy);
@@ -403,7 +423,7 @@ var kaleidoscope = function() {
       //replace variable angle with 0, to cease the canvas
       //from rotating.
       var mxx, mxy, myx, myy;
-      if (rotScreen) {
+      if (opts.rotScreen) {
         mxx = Math.cos(angle) * len;
         mxy = Math.sin(angle) * len;
         myx = Math.cos(angle + Math.PI / 2) * len * Math.sqrt(3) / 2;
@@ -418,8 +438,8 @@ var kaleidoscope = function() {
       // render
       ctx.clearRect(0, 0, w, h);
 
-      if (bgColor) {
-        ctx.fillStyle = bgColor;
+      if (opts.bgColor) {
+        ctx.fillStyle = opts.bgColor;
         ctx.fillRect(0, 0, w, h);
       }
 
