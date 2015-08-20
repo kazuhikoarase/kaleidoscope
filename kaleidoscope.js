@@ -170,6 +170,12 @@ var kaleidoscope = function() {
   
         var timeSpan = timeStamp - lastStamp;
         lastStamp = timeStamp;
+
+        if (timeSpan > 1000) {
+          // avoid runaway.
+          timeSpan = 0;
+        }
+
         var size = ks.getSize();
         updateSize(size.width, size.height);
         if (shape === 'square') {
