@@ -301,45 +301,7 @@ var kaleidoscope = function() {
       return (ret < 0)? n + ret : ret;
     };
 
-    var drawTriangleUnit = function(x, y, l, rot, inv) {
-
-      ctx.save();
-
-      ctx.translate(x, y);
-      if (opts.rotScreen) {
-        ctx.rotate(angle);
-      }
-      ctx.translate(-ox, -oy);
-
-      if (inv) {
-        ctx.transform(1, 0, 0, -1, 0, 0);
-      }
-
-      for (var i = 0; i < rot; i += 1) {
-        ctx.rotate(-Math.PI / 3 * 2);
-        ctx.translate(-l, 0);
-      }
-
-      // clip triangle
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(l, 0);
-      ctx.lineTo(l / 2, l * Math.sqrt(3) / 2);
-      ctx.closePath();
-      ctx.clip();
-
-      // adjust
-      ctx.translate(ox, oy);
-      if (opts.rotScreen) {
-        ctx.rotate(-angle);
-      }
-
-      // content
-      ctx.translate(-rect / 2, -rect / 2);
-      ctx.drawImage(content.canvas, 0, 0);
-
-      ctx.restore();
-    };
+    // square
 
     var updateSquareDisplay = function(w, h) {
 
@@ -414,6 +376,8 @@ var kaleidoscope = function() {
 
     };
 
+    // triangle
+
     var updateTriangleDisplay = function(w, h) {
 
       content.moveAll(opts);
@@ -458,6 +422,46 @@ var kaleidoscope = function() {
           drawTriangleUnit(tx, ty, len, rot, true);
         }
       }
+    };
+
+    var drawTriangleUnit = function(x, y, l, rot, inv) {
+
+      ctx.save();
+
+      ctx.translate(x, y);
+      if (opts.rotScreen) {
+        ctx.rotate(angle);
+      }
+      ctx.translate(-ox, -oy);
+
+      if (inv) {
+        ctx.transform(1, 0, 0, -1, 0, 0);
+      }
+
+      for (var i = 0; i < rot; i += 1) {
+        ctx.rotate(-Math.PI / 3 * 2);
+        ctx.translate(-l, 0);
+      }
+
+      // clip triangle
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(l, 0);
+      ctx.lineTo(l / 2, l * Math.sqrt(3) / 2);
+      ctx.closePath();
+      ctx.clip();
+
+      // adjust
+      ctx.translate(ox, oy);
+      if (opts.rotScreen) {
+        ctx.rotate(-angle);
+      }
+
+      // content
+      ctx.translate(-rect / 2, -rect / 2);
+      ctx.drawImage(content.canvas, 0, 0);
+
+      ctx.restore();
     };
  
     var ks = {
