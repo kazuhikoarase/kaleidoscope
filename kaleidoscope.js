@@ -110,7 +110,7 @@ var kaleidoscope = function() {
       particles.push(particle() );
     }
 
-    var moveAll = function() {
+    var moveAll = function(opts) {
       bufCtx.clearRect(0, 0, rect, rect);
       bufCtx.drawImage(ctx.canvas, 0, 0);
       ctx.clearRect(0, 0, rect, rect);
@@ -118,7 +118,9 @@ var kaleidoscope = function() {
       ctx.globalAlpha = 0.8;
       ctx.drawImage(bufCtx.canvas, 0, 0);
       ctx.restore();
-      //ctx.globalCompositeOperation = 'lighter';
+      if (opts.globalCompositeOperation) {
+        ctx.globalCompositeOperation = opts.globalCompositeOperation;
+      }
       for (var i = 0; i < particles.length; i += 1) {
         particles[i].move();
       }
@@ -136,11 +138,13 @@ var kaleidoscope = function() {
   };
 
   var defaultOpts = {
+    numParticles: 32,
     bgColor: '#000000',
     shape: 'triangle',
     rotScreen: true,
     postInitHandler: null,
-    renderHandler: null
+    renderHandler: null,
+    globalCompositeOperation: null
   };
 
   return function(ctx, imageSrcList, userOpts) {
@@ -179,7 +183,7 @@ var kaleidoscope = function() {
 
     var init = function(images) {
 
-      content = createContent(rect, ox, oy, images, 55);
+      content = createContent(rect, ox, oy, images, opts.numParticles);
 
       var lastStamp = 0;
       var render = function(timeStamp) {
@@ -339,7 +343,7 @@ var kaleidoscope = function() {
 
     var updateSquareDisplay = function(w, h) {
 
-      content.moveAll();
+      content.moveAll(opts);
 
       // render
       ctx.clearRect(0, 0, w, h);
@@ -412,7 +416,7 @@ var kaleidoscope = function() {
 
     var updateTriangleDisplay = function(w, h) {
 
-      content.moveAll();
+      content.moveAll(opts);
 
       // center
       var cx = w / 2;

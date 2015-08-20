@@ -16,7 +16,9 @@ window.onload = function() {
   var ctx = document.getElementById('cv').getContext('2d');
   var imageSrcList = ctx.canvas.innerHTML.
     replace(/^\s+|\s+$/g,'').split(/\s+/g);
-  var ks = kaleidoscope(ctx, imageSrcList);
+  var ks = kaleidoscope(ctx, imageSrcList, {
+    globalCompositeOperation: 'lighter'
+  });
   var normalSize = function() {
     return { width: 400, height: 400 };
   };
