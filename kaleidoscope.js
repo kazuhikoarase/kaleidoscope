@@ -27,7 +27,7 @@ var kaleidoscope = function() {
     }
   };
 
-  var createContent = function(rect, ox, oy, images, numParticles) {
+  var createContent = function(rect, ox, oy, images, opts) {
 
     var _deltaAngle = 0;
 
@@ -106,11 +106,11 @@ var kaleidoscope = function() {
     };
 
     var particles = [];
-    for (var i = 0; i < numParticles; i += 1) {
+    for (var i = 0; i < opts.numParticles; i += 1) {
       particles.push(particle() );
     }
 
-    var moveAll = function(opts) {
+    var moveAll = function() {
       bufCtx.clearRect(0, 0, rect, rect);
       bufCtx.drawImage(ctx.canvas, 0, 0);
       ctx.clearRect(0, 0, rect, rect);
@@ -183,7 +183,7 @@ var kaleidoscope = function() {
 
     var init = function(images) {
 
-      content = createContent(rect, ox, oy, images, opts.numParticles);
+      content = createContent(rect, ox, oy, images, opts);
 
       var lastStamp = 0;
       var render = function(timeStamp) {
@@ -305,7 +305,7 @@ var kaleidoscope = function() {
 
     var updateSquareDisplay = function(w, h) {
 
-      content.moveAll(opts);
+      content.moveAll();
 
       // render
       ctx.clearRect(0, 0, w, h);
@@ -380,7 +380,7 @@ var kaleidoscope = function() {
 
     var updateTriangleDisplay = function(w, h) {
 
-      content.moveAll(opts);
+      content.moveAll();
 
       // center
       var cx = w / 2;
